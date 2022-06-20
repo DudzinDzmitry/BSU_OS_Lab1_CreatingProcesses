@@ -1,4 +1,10 @@
-//
-// Created by 1111 on 20.06.2022.
-//
+#include <windows.h>
+#include <fstream>
 
+int main(int argc, char *argv[]) {
+    SetConsoleOutputCP(CP_UTF8);
+    std::ofstream list(argv[0], std::ios::binary);
+
+    list.close();
+    return 0;
+}
