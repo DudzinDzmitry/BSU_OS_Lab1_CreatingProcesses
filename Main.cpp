@@ -45,6 +45,22 @@ int main() {
         std::cout << temp.ID << " " << temp.fullName << " " << temp.hoursWorked << ";\n";
     }
 
+    std::cout << "Введите имя текстового файла для отчета по заработной плате (в виде \"имя_файла.txt\"):";
+    std::string reportName;
+    std::cin >> reportName;
+
+    std::cout << "Введите плату за час:";
+    std::string payPerHour;
+    std::cin >> payPerHour;
+
+    cmdLine = listName + " " + reportName + " " + payPerHour;
+    if (!startProcess("reporter.exe", cmdLine.c_str())) return GetLastError();
+
+    std::string record;
+    std::ifstream report(reportName.c_str());
+
+    while (getline(report, record)) std::cout << record << ";\n";
+
     system("pause");
     return 0;
 }
