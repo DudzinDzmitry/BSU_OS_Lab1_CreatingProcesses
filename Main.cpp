@@ -1,5 +1,25 @@
 #include <windows.h>
 #include <iostream>
+#include <fstream>
+#include "Employee.h"
+
+bool startProcess(const char *appName, const char *cmdLine) {
+    STARTUPINFO si;
+    ZeroMemory(&si, sizeof(STARTUPINFO));
+    si.cb = sizeof(STARTUPINFO);
+
+    PROCESS_INFORMATION pi;
+
+    if (!CreateProcess(appName, const_cast<char *>(cmdLine), NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si,
+                       &pi))
+        return false;
+
+    WaitForSingleObject(pi.hProcess, INFINITE);
+
+    CloseHandle(pi.hThread);
+    CloseHandle(pi.hProcess);
+    return true;
+}
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
@@ -13,6 +33,17 @@ int main() {
     std::cout << "Введите количество записей в списке соответствующее количеству сотрудников:";
     std::string recordCount;
     std::cin >> recordCount;
+
+    std::string cmdLine = listName + " " + recordCount;
+    if (!startProcess("creator.exe", cmdLine.c_str())) return GetLastError();
+
+    employee temp = {};
+
+    std::ifstream list(listName.c_str(), std::ios::binary);
+
+    while (list.read((char *) &temp, sizeof(employee))) {
+        std::cout << temp.ID << " " << temp.fullName << " " << temp.hoursWorked << ";\n";
+    }
 
     system("pause");
     return 0;
