@@ -42,7 +42,7 @@ int main() {
     if (!startProcess("creator.exe", cmdLine.c_str())) {
         std::cout << "Не удалось запустить процесс creator.exe, поскольку при создании была встречена ошибка " << GetLastError() << "\n";
         system("pause");
-        return 1;
+        return GetLastError();
     }
 
     employee temp = {};
@@ -68,7 +68,7 @@ int main() {
     if (!startProcess("reporter.exe", cmdLine.c_str())) {
         std::cout << "Не удалось запустить процесс reporter.exe, поскольку при создании была встречена ошибка " << GetLastError() << "\n";
         system("pause");
-        return 1;
+        return GetLastError();
     }
 
     std::string record;
