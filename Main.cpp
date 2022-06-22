@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "Employee.h"
 
 bool startProcess(const char *appName, const char *cmdLine) {
@@ -31,11 +32,18 @@ int main() {
     std::cin >> listName;
 
     std::cout << "Введите количество записей в списке соответствующее количеству сотрудников:";
-    std::string recordCount;
+    int recordCount;
     std::cin >> recordCount;
 
-    std::string cmdLine = listName + " " + recordCount;
-    if (!startProcess("creator.exe", cmdLine.c_str())) return GetLastError();
+    std::ostringstream tempStrStream;
+    tempStrStream << recordCount;
+
+    std::string cmdLine = listName + " " + tempStrStream.str();
+    if (!startProcess("creator.exe", cmdLine.c_str())) {
+        std::cout << "Не удалось запустить процесс creator.exe, поскольку при создании была встречена ошибка " << GetLastError() << "\n";
+        system("pause");
+        return 1;
+    }
 
     employee temp = {};
 
@@ -50,11 +58,18 @@ int main() {
     std::cin >> reportName;
 
     std::cout << "Введите плату за час:";
-    std::string payPerHour;
-    std::cin >> payPerHour;
+    double payPerHour;
 
-    cmdLine = listName + " " + reportName + " " + payPerHour;
-    if (!startProcess("reporter.exe", cmdLine.c_str())) return GetLastError();
+    std::cin >> payPerHour;
+    tempStrStream.str("");
+    tempStrStream << payPerHour;
+
+    cmdLine = listName + " " + reportName + " " + tempStrStream.str();
+    if (!startProcess("reporter.exe", cmdLine.c_str())) {
+        std::cout << "Не удалось запустить процесс reporter.exe, поскольку при создании была встречена ошибка " << GetLastError() << "\n";
+        system("pause");
+        return 1;
+    }
 
     std::string record;
     std::ifstream report(reportName.c_str());
